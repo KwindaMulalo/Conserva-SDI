@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Conserva | Environmental Legislation & Policy</title>
+    <meta
+      name="description"
+      content="Access South African environmental legislation, bills, policy papers, gazettes, and conservation governance resources."
+    />
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="assets/apple-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --background: #1d2529;
+        --foreground: #fafafa;
+        --card: rgba(38, 47, 51, 0.78);
+        --primary: #d2b549;
+        --primary-foreground: #1d2529;
+        --secondary: #323d42;
+        --border: rgba(98, 112, 119, 0.45);
+        --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+        --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --font-serif: "Playfair Display", Georgia, serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--font-sans);
+        line-height: 1.5;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .container {
+        width: min(100% - 48px, 1280px);
+        margin: 0 auto;
+      }
+
+      .site-nav {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 50;
+        border-bottom: 1px solid var(--border);
+        background: rgba(29, 37, 41, 0.82);
+        backdrop-filter: blur(24px);
+        animation: nav-in 0.6s ease-out both;
+      }
+
+      .nav-inner {
+        display: flex;
+        min-height: 73px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 16px 0;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: transform 0.25s ease;
+      }
+
+      .brand:hover {
+        transform: scale(1.02);
+      }
+
+      .brand-logo {
+        display: block;
+        width: 224px;
+        height: 62px;
+        border-radius: 8px;
+        object-fit: contain;
+        object-position: 50% 50%;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+
+      .nav-links a,
+      .nav-disabled {
+        color: rgba(250, 250, 250, 0.8);
+        font-size: 14px;
+      }
+
+      .nav-links a {
+        transition: color 0.2s ease, transform 0.2s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--foreground);
+        transform: translateY(-2px);
+      }
+
+      .nav-disabled {
+        cursor: default;
+        user-select: none;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        cursor: pointer;
+        font-weight: 500;
+        padding: 0 24px;
+        transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .button:hover {
+        background: #c2a840;
+      }
+
+      .button-outline {
+        width: 100%;
+        min-height: 60px;
+        border-color: rgba(250, 250, 250, 0.2);
+        border-radius: 12px;
+        background: transparent;
+        color: var(--foreground);
+      }
+
+      .button-outline:hover {
+        background: var(--foreground);
+        color: var(--background);
+      }
+
+      .menu-toggle {
+        display: none;
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        background: transparent;
+        color: var(--foreground);
+        cursor: pointer;
+      }
+
+      .mobile-menu {
+        display: none;
+        overflow: hidden;
+        border-top: 1px solid var(--border);
+        background: rgba(29, 37, 41, 0.96);
+        backdrop-filter: blur(24px);
+      }
+
+      .mobile-menu-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 24px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1,
+      h2 {
+        font-family: var(--font-serif);
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+
+      h1 {
+        max-width: 740px;
+        font-size: clamp(48px, 7vw, 96px);
+      }
+
+      h2 {
+        font-size: clamp(36px, 5vw, 56px);
+      }
+
+      .accent {
+        color: var(--primary);
+      }
+
+      .legislation-hero {
+        position: relative;
+        min-height: 88vh;
+        overflow: hidden;
+        padding-top: 73px;
+      }
+
+      .legislation-hero-bg,
+      .legislation-hero-bg img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .legislation-hero-bg {
+        animation: hero-bg-in 1.5s ease-out both;
+      }
+
+      .legislation-hero-bg img {
+        object-fit: cover;
+      }
+
+      .legislation-hero-bg::before,
+      .legislation-hero-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .legislation-hero-bg::before {
+        background: linear-gradient(90deg, rgba(29, 37, 41, 0.98), rgba(29, 37, 41, 0.78), rgba(29, 37, 41, 0.34));
+      }
+
+      .legislation-hero-bg::after {
+        background:
+          linear-gradient(0deg, var(--background), transparent 52%),
+          radial-gradient(circle at 70% 36%, rgba(210, 181, 73, 0.16), transparent 34%);
+      }
+
+      .legislation-hero-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        min-height: calc(88vh - 73px);
+        flex-direction: column;
+        justify-content: center;
+        padding: 86px 0 110px;
+      }
+
+      .hero-kicker {
+        margin-bottom: 22px;
+        color: var(--foreground);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .hero-lead {
+        max-width: 650px;
+        margin-top: 28px;
+        color: rgba(250, 250, 250, 0.76);
+        font-size: 19px;
+      }
+
+      .legislation-section {
+        padding: 72px 0 112px;
+      }
+
+      .section-heading {
+        max-width: 760px;
+        margin-bottom: 44px;
+      }
+
+      .section-heading p {
+        margin-top: 16px;
+        color: rgba(250, 250, 250, 0.7);
+        font-size: 17px;
+      }
+
+      .legislation-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .legislation-card {
+        display: flex;
+        min-height: 250px;
+        flex-direction: column;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--card);
+        padding: 24px;
+        backdrop-filter: blur(24px);
+        transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .legislation-card:hover {
+        border-color: rgba(210, 181, 73, 0.46);
+        box-shadow: var(--shadow);
+        transform: translateY(-6px);
+      }
+
+      .legislation-card h3 {
+        color: var(--primary);
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1.18;
+      }
+
+      .legislation-card p {
+        margin-top: 14px;
+        color: rgba(250, 250, 250, 0.76);
+        font-size: 14px;
+      }
+
+      .legislation-button {
+        border: 1px solid rgba(250, 250, 250, 0.2);
+        margin-top: auto;
+      }
+
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 48px 0;
+      }
+
+      .footer-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .footer-inner p,
+      .footer-links a {
+        color: rgba(250, 250, 250, 0.6);
+        font-size: 14px;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 24px;
+      }
+
+      .footer-links a:hover {
+        color: var(--foreground);
+      }
+
+      .icon {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .stagger > * {
+        transition-delay: calc(var(--i, 0) * 90ms);
+      }
+
+      @keyframes nav-in {
+        from {
+          opacity: 0;
+          transform: translateY(-100px);
+        }
+      }
+
+      @keyframes hero-bg-in {
+        from {
+          opacity: 0;
+          transform: scale(1.08);
+        }
+      }
+
+      @media (max-width: 1100px) {
+        .legislation-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 980px) {
+        .footer-inner {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .container {
+          width: min(100% - 32px, 1280px);
+        }
+
+        .nav-links,
+        .nav-cta {
+          display: none;
+        }
+
+        .menu-toggle {
+          display: inline-flex;
+        }
+
+        .mobile-menu.open {
+          display: block;
+        }
+
+        .legislation-hero {
+          min-height: 78vh;
+        }
+
+        .legislation-hero-content {
+          min-height: calc(78vh - 73px);
+          padding: 54px 0 72px;
+        }
+
+        h1 {
+          font-size: clamp(46px, 13vw, 68px);
+        }
+
+        .hero-lead {
+          font-size: 16px;
+        }
+
+        .legislation-section {
+          padding: 56px 0 80px;
+        }
+
+        .legislation-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-links {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .brand-logo {
+          width: 180px;
+          height: 50px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="site-nav">
+      <div class="container nav-inner">
+        <a class="brand" href="index.html#home" aria-label="Conserva home">
+          <img class="brand-logo" src="assets/conserva-logo-cropped.png" alt="Conserva" />
+        </a>
+        <div class="nav-links" aria-label="Primary navigation">
+          <a href="index.html#home">Home</a>
+          <a href="index.html#about">About Us</a>
+          <a href="index.html#services">Services</a>
+          <span class="nav-disabled">Legislation</span>
+          <a href="index.html#contact">Contact Us</a>
+        </div>
+        <div class="nav-cta">
+          <a class="button" href="Portal/index.html">Launch Portal</a>
+        </div>
+        <button class="menu-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+          <svg class="icon menu-icon"><use href="#icon-menu"></use></svg>
+          <svg class="icon close-icon" hidden><use href="#icon-x"></use></svg>
+        </button>
+      </div>
+      <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-inner">
+          <a href="index.html#home">Home</a>
+          <a href="index.html#about">About Us</a>
+          <a href="index.html#services">Services</a>
+          <span class="nav-disabled">Legislation</span>
+          <a href="index.html#contact">Contact Us</a>
+          <a class="button" href="Portal/index.html">Launch Portal</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <section class="legislation-hero" id="home">
+        <div class="legislation-hero-bg" aria-hidden="true">
+          <img src="assets/legislation-hero.png" alt="" />
+        </div>
+        <div class="container legislation-hero-content">
+          <p class="hero-kicker reveal">Environmental governance</p>
+          <h1 class="reveal">Environmental <span class="accent">Legislation</span> &amp; Policy</h1>
+          <p class="hero-lead reveal">
+            Access South African environmental acts, regulations, policy papers, gazettes, and conservation governance
+            documents related to protected areas and biodiversity management.
+          </p>
+        </div>
+      </section>
+
+      <section class="legislation-section" aria-labelledby="legislation-resources">
+        <div class="container">
+          <div class="section-heading reveal">
+            <h2 id="legislation-resources">Legislation <span class="accent">Resources</span></h2>
+            <p>
+              Quick links to official Department of Forestry, Fisheries and the Environment resources for bills,
+              notices, policy papers, acts, regulations, and international obligations.
+            </p>
+          </div>
+
+          <div class="legislation-grid stagger">
+            <article class="legislation-card reveal" style="--i: 0">
+              <h3>Bills</h3>
+              <p>View draft environmental bills and legislative proposals before they become enacted law.</p>
+              <a class="button button-outline legislation-button" href="https://www.dffe.gov.za/legislation/bills" target="_blank" rel="noopener noreferrer">
+                Open Resource
+              </a>
+            </article>
+
+            <article class="legislation-card reveal" style="--i: 1">
+              <h3>Green Papers</h3>
+              <p>Explore early policy discussion papers used to shape environmental governance directions.</p>
+              <a class="button button-outline legislation-button" href="https://www.dffe.gov.za/index.php/legislation/greenpapers" target="_blank" rel="noopener noreferrer">
+                Open Resource
+              </a>
+            </article>
+
+            <article class="legislation-card reveal" style="--i: 2">
+              <h3>White Papers</h3>
+              <p>Access formal policy positions and frameworks that guide environmental decision-making.</p>
+              <a class="button button-outline legislation-button" href="https://www.dffe.gov.za/legislation/whitepapers" target="_blank" rel="noopener noreferrer">
+                Open Resource
+              </a>
+            </article>
+
+            <article class="legislation-card reveal" style="--i: 3">
+              <h3>Acts and Regulations</h3>
+              <p>Find enacted legislation and regulations governing environmental protection and compliance.</p>
+              <a class="button button-outline legislation-button" href="https://www.dffe.gov.za/index.php/legislation/actsregulations" target="_blank" rel="noopener noreferrer">
+                Open Resource
+              </a>
+            </article>
+
+            <article class="legislation-card reveal" style="--i: 4">
+              <h3>International Agreements</h3>
+              <p>Review international obligations connected to conservation, biodiversity, and environmental management.</p>
+              <a class="button button-outline legislation-button" href="https://www.dffe.gov.za/legislation/internationalagreementsobligations" target="_blank" rel="noopener noreferrer">
+                Open Resource
+              </a>
+            </article>
+
+            <article class="legislation-card reveal" style="--i: 5">
+              <h3>Gazetted Notices</h3>
+              <p>Open official gazette notices for environmental decisions, notices, and public records.</p>
+              <a class="button button-outline legislation-button" href="https://www.dffe.gov.za/legislation/gazetted_notices" target="_blank" rel="noopener noreferrer">
+                Open Resource
+              </a>
+            </article>
+
+            <article class="legislation-card reveal" style="--i: 6">
+              <h3>Appeals</h3>
+              <p>Access notices and records linked to environmental appeal processes and related decisions.</p>
+              <a class="button button-outline legislation-button" href="https://www.dffe.gov.za/index.php/legislation/appeals" target="_blank" rel="noopener noreferrer">
+                Open Resource
+              </a>
+            </article>
+
+            <article class="legislation-card reveal" style="--i: 7">
+              <h3>Public Notices</h3>
+              <p>Find public notices for participation, updates, and formal environmental announcements.</p>
+              <a class="button button-outline legislation-button" href="https://www.dffe.gov.za/legislation/publicnotices" target="_blank" rel="noopener noreferrer">
+                Open Resource
+              </a>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+  <div class="container footer-inner" style="display: flex; align-items: center; justify-content: space-between;">
+
+    <!-- Logo -->
+    <a class="brand" href="index.html#home">
+      <img class="brand-logo" src="assets/conserva-logo-cropped.png" alt="Conserva">
+    </a>
+
+        <!-- Center Text -->
+    <div style="text-align: center; flex: 1;">
+
+      <p style="margin: 0;">
+        © 2026 APG3039B | Spatial Data Infrastructures | University of Cape Town<br />
+        
+      </p>
+
+      <p style="margin: 5px 0 0 0; font-size: 14px;">
+        Developed by Letelo Chuma and Kwinda Mulalo
+      </p>
+
+    </div>
+
+  <!-- Footer Text -->
+<div class="footer-links" style="display: flex; gap: 16px; align-items: center;">
+  
+  <span style="font-size: 14px; color: rgba(255,255,255,0.75);">
+    Privacy Policy
+  </span>
+
+  <span style="font-size: 14px; color: rgba(255,255,255,0.75);">
+    Terms of Use
+  </span>
+
+</div>
+</footer>
+
+    <svg aria-hidden="true" width="0" height="0" style="position: absolute">
+      <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></symbol>
+      <symbol id="icon-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+    </svg>
+
+    <script>
+      const toggle = document.querySelector(".menu-toggle");
+      const menu = document.querySelector(".mobile-menu");
+      const menuIcon = document.querySelector(".menu-icon");
+      const closeIcon = document.querySelector(".close-icon");
+
+      toggle.addEventListener("click", () => {
+        const isOpen = menu.classList.toggle("open");
+        toggle.setAttribute("aria-expanded", String(isOpen));
+        menuIcon.hidden = isOpen;
+        closeIcon.hidden = !isOpen;
+      });
+
+      menu.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          menu.classList.remove("open");
+          toggle.setAttribute("aria-expanded", "false");
+          menuIcon.hidden = false;
+          closeIcon.hidden = true;
+        });
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15, rootMargin: "0px 0px -80px 0px" }
+      );
+
+      document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+    </script>
+  </body>
+</html>

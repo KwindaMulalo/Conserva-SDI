@@ -1,0 +1,1579 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Conserva | Mapping Conservation. Preserving Tomorrow.</title>
+    <meta
+      name="description"
+      content="South Africa's premier geoportal for managing and monitoring protected areas, wildlife reserves, and conservation zones."
+    />
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="assets/apple-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --background: #1d2529;
+        --foreground: #fafafa;
+        --card: rgba(38, 47, 51, 0.78);
+        --primary: #d2b549;
+        --primary-foreground: #1d2529;
+        --secondary: #323d42;
+        --muted: #475359;
+        --border: rgba(98, 112, 119, 0.45);
+        --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+        --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --font-serif: "Playfair Display", Georgia, serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--font-sans);
+        line-height: 1.5;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      .container {
+        width: min(100% - 48px, 1280px);
+        margin: 0 auto;
+      }
+
+      .site-nav {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 50;
+        border-bottom: 1px solid var(--border);
+        background: rgba(29, 37, 41, 0.82);
+        backdrop-filter: blur(24px);
+        animation: nav-in 0.6s ease-out both;
+      }
+
+      .nav-inner {
+        display: flex;
+        min-height: 73px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 16px 0;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: transform 0.25s ease;
+      }
+
+      .brand:hover {
+        transform: scale(1.02);
+      }
+
+      .brand-logo {
+        display: block;
+        width: 224px;
+        height: 62px;
+        border-radius: 8px;
+        object-fit: contain;
+        object-position: 50% 50%;
+      }
+
+      .brand-mark,
+      .icon-box {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: rgba(210, 181, 73, 0.18);
+        color: var(--primary);
+        flex: 0 0 auto;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+
+      .nav-links a {
+        color: rgba(250, 250, 250, 0.8);
+        font-size: 14px;
+        transition: color 0.2s ease, transform 0.2s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--foreground);
+        transform: translateY(-2px);
+      }
+
+      .nav-disabled {
+        color: rgba(250, 250, 250, 0.8);
+        font-size: 14px;
+        cursor: default;
+        user-select: none;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        cursor: pointer;
+        font-weight: 500;
+        padding: 0 24px;
+        transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .button:hover {
+        background: #c2a840;
+      }
+
+      .shuffle-card .button-outline {
+        margin-top: auto;
+      }
+
+      .button-outline {
+        width: 100%;
+        min-height: 60px;
+        border-color: rgba(250, 250, 250, 0.2);
+        border-radius: 12px;
+        background: transparent;
+        color: var(--foreground);
+      }
+
+      .button-outline:hover {
+        background: var(--foreground);
+        color: var(--background);
+      }
+
+      .menu-toggle {
+        display: none;
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        background: transparent;
+        color: var(--foreground);
+        cursor: pointer;
+      }
+
+      .mobile-menu {
+        display: none;
+        overflow: hidden;
+        border-top: 1px solid var(--border);
+        background: rgba(29, 37, 41, 0.96);
+        backdrop-filter: blur(24px);
+      }
+
+      .mobile-menu-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 24px;
+      }
+
+      .hero {
+        position: relative;
+        min-height: 100vh;
+        overflow: hidden;
+        padding-top: 73px;
+      }
+
+      .hero-bg,
+      .hero-bg img,
+      .image-panel img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .hero-bg {
+        animation: hero-bg-in 1.5s ease-out both;
+      }
+
+      .hero-bg img,
+      .image-panel img {
+        object-fit: cover;
+      }
+
+      .hero-bg img {
+        z-index: 0;
+      }
+
+      .hero-bg::before,
+      .hero-bg::after,
+      .image-panel::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .hero-bg::before {
+        background: linear-gradient(90deg, rgba(29, 37, 41, 0.95), rgba(29, 37, 41, 0.7), rgba(29, 37, 41, 0.4));
+        z-index: 1;
+      }
+
+      .hero-bg::after {
+        background: linear-gradient(0deg, var(--background), transparent 55%, transparent);
+        z-index: 2;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        padding: 64px 0 72px;
+      }
+
+      .hero-grid,
+      .split-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 48px;
+      }
+
+      .hero-copy {
+        display: flex;
+        min-height: 510px;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1,
+      h2 {
+        font-family: var(--font-serif);
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+
+      h1 {
+        max-width: 680px;
+        font-size: clamp(48px, 7vw, 112px);
+      }
+
+      h2 {
+        font-size: clamp(40px, 5vw, 56px);
+      }
+
+      .accent {
+        color: var(--primary);
+      }
+
+      .hero-lead,
+      .section-lead {
+        color: rgba(250, 250, 250, 0.7);
+      }
+
+      .hero-lead {
+        max-width: 448px;
+        margin-top: 28px;
+        font-size: 18px;
+      }
+
+      .hero-stat {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 48px;
+      }
+
+      .hero-stat strong {
+        font-size: 24px;
+      }
+
+      .hero-stat span {
+        color: rgba(250, 250, 250, 0.62);
+      }
+
+      .feature-wrap {
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+      }
+
+      .glass-card,
+      .form-card {
+        border: 1px solid var(--border);
+        background: var(--card);
+        backdrop-filter: blur(24px);
+      }
+
+
+      .glass-card {
+        width: min(100%, 384px);
+        min-height: 382px;
+        border-radius: 16px;
+        padding: 24px;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .shuffle-card-stack {
+        position: relative;
+        width: min(100%, 384px);
+      }
+
+      .shuffle-card-stack .glass-card {
+        width: 100%;
+      }
+
+
+      .shuffle-card {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .shuffle-card-shadow {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: rgba(38, 47, 51, 0.58);
+        opacity: 0;
+        transform: translateX(-10px) scale(0.98);
+        transition: opacity 0.34s ease, transform 0.34s ease;
+        backdrop-filter: blur(18px);
+        pointer-events: none;
+      }
+
+      .shuffle-card-stack.shuffling .shuffle-card-shadow {
+        opacity: 0.72;
+        transform: translateX(-18px) scale(0.985);
+      }
+
+      .shuffle-card-stack.shuffling .shuffle-card {
+        box-shadow: var(--shadow);
+        transform: translateX(34px) scale(0.985);
+      }
+
+      .shuffle-card-stack.settling .shuffle-card {
+        transform: translateX(0) scale(1);
+      }
+
+      .shuffle-card-stack:not(.shuffling) .glass-card:hover,
+      .service-card:hover,
+      .stat-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow);
+      }
+
+      .card-head,
+      .contact-row,
+      .footer-inner,
+      .partners,
+      .map-action {
+        display: flex;
+        align-items: center;
+      }
+
+      .card-head {
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .card-head h3 {
+        line-height: 1.2;
+        overflow-wrap: anywhere;
+      }
+
+      .eyebrow {
+        color: rgba(250, 250, 250, 0.6);
+        font-size: 14px;
+      }
+
+      .shuffle-card {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        min-height: 382px;
+      }
+
+      .shuffle-card .quick-stats {
+        margin-top: 24px;
+      }
+
+      .shuffle-card .region-card {
+        margin-top: 16px;
+      }
+
+      .shuffle-card .button-outline {
+        margin-top: auto;
+      }
+
+      .round-action {
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--secondary);
+        color: rgba(250, 250, 250, 0.7);
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.2s ease;
+      }
+
+      .round-action:hover {
+        background: rgba(50, 61, 66, 0.82);
+        transform: scale(1.1) rotate(15deg);
+      }
+
+      .quick-stats {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 24px;
+      }
+
+      .mini-card,
+      .region-card {
+        border-radius: 12px;
+        background: rgba(50, 61, 66, 0.5);
+      }
+
+      .mini-card {
+        padding: 12px 16px;
+        transition: transform 0.2s ease, background 0.2s ease;
+      }
+
+      .mini-card:hover,
+      .region-card:hover {
+        background: rgba(50, 61, 66, 0.7);
+        transform: scale(1.02);
+      }
+
+      .mini-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(250, 250, 250, 0.6);
+        font-size: 14px;
+      }
+
+      .mini-card p {
+        margin-top: 4px;
+        font-weight: 500;
+      }
+
+      .region-card {
+        margin-top: 16px;
+        padding: 16px;
+        transition: transform 0.2s ease, background 0.2s ease;
+      }
+
+      .region-card .map-action,
+      .species-row,
+      .partners {
+        justify-content: space-between;
+      }
+
+      .tiny {
+        color: rgba(250, 250, 250, 0.5);
+        font-size: 12px;
+      }
+
+      .species-row {
+        display: flex;
+        align-items: center;
+        margin-top: 16px;
+        gap: 16px;
+      }
+
+      .species-row strong {
+        font-size: 24px;
+      }
+
+      .species-row span {
+        color: rgba(250, 250, 250, 0.6);
+        font-size: 14px;
+      }
+
+      .partners {
+        gap: 28px;
+        margin-top: 64px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: rgba(38, 47, 51, 0.62);
+        padding: 20px 32px;
+        backdrop-filter: blur(16px);
+      }
+
+      .partners-title {
+        color: rgba(250, 250, 250, 0.5);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .partner-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px 40px;
+      }
+
+      .partner-list span {
+        color: rgba(250, 250, 250, 0.8);
+        font-size: 14px;
+        font-weight: 500;
+        transition: color 0.2s ease, transform 0.2s ease;
+      }
+
+      .partner-list span:hover {
+        color: var(--primary);
+        transform: scale(1.05);
+      }
+
+      .partners.logo-strip {
+        background: rgba(0, 0, 0, 0.72) !important;
+      }
+
+      .partner-logo-link {
+        display: flex;
+        min-height: 76px;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      .partner-logo-link:hover {
+        opacity: 0.9;
+        transform: translateY(-2px) scale(1.03);
+      }
+
+      .partner-logo {
+        display: block;
+        object-fit: contain;
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.12));
+      }
+
+      .partner-logo.uct {
+        width: 72px;
+        height: 72px;
+      }
+
+      .partner-logo.cape-nature {
+        width: 200px;
+        height: 68px;
+      }
+
+      .partner-logo.sanbi {
+        width: 190px;
+        height: 62px;
+      }
+
+      .partner-logo.dffe {
+        width: 238px;
+        height: 72px;
+      }
+
+      .partner-logo.peace-parks {
+        width: 205px;
+        height: 58px;
+      }
+
+      .partner-logo.sanparks {
+        width: 86px;
+        height: 82px;
+      }
+
+      section {
+        position: relative;
+      }
+
+      .section {
+        padding: 96px 0;
+      }
+
+      .muted-section {
+        background: rgba(50, 61, 66, 0.3);
+      }
+
+      .section-copy p {
+        margin-top: 18px;
+        color: rgba(250, 250, 250, 0.7);
+      }
+
+      .section-copy p:first-of-type {
+        margin-top: 24px;
+        font-size: 18px;
+      }
+
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        margin-top: 32px;
+      }
+
+      .stat-card,
+      .service-card,
+      .form-card {
+        border-radius: 16px;
+        background: var(--card);
+      }
+
+      .stat-card {
+        padding: 24px;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .stat-card strong {
+        display: block;
+        color: var(--primary);
+        font-size: 32px;
+      }
+
+      .stat-card span {
+        color: rgba(250, 250, 250, 0.6);
+        font-size: 14px;
+      }
+
+      .image-panel {
+        position: relative;
+        min-height: 500px;
+        overflow: hidden;
+        border-radius: 16px;
+      }
+
+      .image-panel::after {
+        background: linear-gradient(0deg, rgba(29, 37, 41, 0.6), transparent);
+      }
+
+      .mission-card {
+        position: absolute;
+        inset: auto 24px 24px;
+        z-index: 1;
+        border-radius: 12px;
+        background: rgba(38, 47, 51, 0.92);
+        padding: 16px;
+        backdrop-filter: blur(8px);
+      }
+
+      .mission-card strong {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .mission-card p {
+        margin-top: 4px;
+        color: rgba(250, 250, 250, 0.7);
+        font-size: 12px;
+      }
+
+      .section-heading {
+        max-width: 720px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .section-heading p {
+        margin-top: 16px;
+      }
+
+      .services-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 32px;
+        margin-top: 64px;
+      }
+
+      .service-card {
+        border: 1px solid var(--border);
+        padding: 32px;
+        transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .service-card:hover {
+        border-color: rgba(210, 181, 73, 0.5);
+      }
+
+      .service-card .icon-box {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+      }
+
+      .service-card h3 {
+        margin-top: 24px;
+        font-size: 20px;
+        font-weight: 500;
+      }
+
+      .service-card p {
+        margin-top: 12px;
+        color: rgba(250, 250, 250, 0.7);
+      }
+
+      .contact-list {
+        display: grid;
+        gap: 24px;
+        margin-top: 32px;
+      }
+
+      .contact-row {
+        gap: 16px;
+        transition: transform 0.2s ease;
+      }
+
+      .contact-row:hover {
+        transform: translateX(5px);
+      }
+
+      .contact-row .icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+      }
+
+      .contact-row p {
+        color: rgba(250, 250, 250, 0.6);
+        font-size: 14px;
+      }
+
+      .contact-row strong {
+        font-weight: 500;
+      }
+
+      .form-card {
+        padding: 32px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .field {
+        margin-bottom: 24px;
+      }
+
+      label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        margin-top: 8px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: rgba(50, 61, 66, 0.5);
+        color: var(--foreground);
+        outline: 0;
+        padding: 13px 16px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      textarea {
+        min-height: 124px;
+        resize: none;
+      }
+
+      input::placeholder,
+      textarea::placeholder {
+        color: rgba(250, 250, 250, 0.48);
+      }
+
+      input:focus,
+      textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 1px var(--primary);
+      }
+
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 48px 0;
+      }
+
+      .footer-inner {
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .footer-inner p,
+      .footer-links a {
+        color: rgba(250, 250, 250, 0.6);
+        font-size: 14px;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 24px;
+      }
+
+      .footer-links a:hover {
+        color: var(--foreground);
+      }
+
+      .icon {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+      }
+
+      .icon-lg {
+        width: 28px;
+        height: 28px;
+      }
+
+      .star {
+        color: var(--primary);
+        fill: var(--primary);
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+
+      .reveal.from-left {
+        transform: translateX(-50px);
+      }
+
+      .reveal.from-right {
+        transform: translateX(50px);
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: translate(0, 0);
+      }
+
+      .stagger > * {
+        transition-delay: calc(var(--i, 0) * 100ms);
+      }
+
+      .hero-copy h1 span,
+      .hero-lead,
+      .hero-stat,
+      .feature-wrap,
+      .partners {
+        animation: fade-up 0.7s ease both;
+      }
+
+      .hero-copy h1 span:nth-child(1) {
+        animation-delay: 0.2s;
+      }
+
+      .hero-copy h1 span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      .hero-copy h1 span:nth-child(5) {
+        animation-delay: 0.6s;
+      }
+
+      .hero-lead {
+        animation-delay: 0.8s;
+      }
+
+      .hero-stat {
+        animation-delay: 1s;
+      }
+
+      .feature-wrap {
+        animation-delay: 0.5s;
+      }
+
+      .partners {
+        animation-delay: 1.2s;
+      }
+
+      @keyframes nav-in {
+        from {
+          opacity: 0;
+          transform: translateY(-100px);
+        }
+      }
+
+      @keyframes hero-bg-in {
+        from {
+          opacity: 0;
+          transform: scale(1.1);
+        }
+      }
+
+      @keyframes fade-up {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+      }
+
+      @media (max-width: 980px) {
+        .hero-grid,
+        .split-grid,
+        .services-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-copy {
+          min-height: auto;
+        }
+
+        .feature-wrap {
+          justify-content: center;
+        }
+
+        .partners,
+        .footer-inner {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .image-panel {
+          min-height: 400px;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .container {
+          width: min(100% - 32px, 1280px);
+        }
+
+        .nav-links,
+        .nav-cta {
+          display: none;
+        }
+
+        .menu-toggle {
+          display: inline-flex;
+        }
+
+        .mobile-menu.open {
+          display: block;
+        }
+
+        .hero-content {
+          padding: 48px 0 56px;
+        }
+
+        h1 {
+          font-size: clamp(48px, 14vw, 72px);
+        }
+
+        .hero-lead {
+          font-size: 16px;
+        }
+
+        .stat-grid,
+        .quick-stats,
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .section {
+          padding: 72px 0;
+        }
+
+        .partners {
+          align-items: center;
+          padding: 20px;
+        }
+
+        .species-row {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .footer-links {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .brand-logo {
+          width: 180px;
+          height: 50px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="site-nav">
+      <div class="container nav-inner">
+        <a class="brand" href="#home" aria-label="Conserva home">
+          <img class="brand-logo" src="assets/conserva-logo-cropped.png" alt="Conserva" />
+        </a>
+        <div class="nav-links" aria-label="Primary navigation">
+          <a href="#home">Home</a>
+          <a href="#about">About Us</a>
+          <a href="#services">Services</a>
+          <a href="legislation.html">Legislation</a>
+          <a href="#contact">Contact Us</a>
+        </div>
+        <div class="nav-cta">
+          <a class="button" href="Portal/index.html">Launch Portal</a>
+        </div>
+        <button class="menu-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+          <svg class="icon menu-icon"><use href="#icon-menu"></use></svg>
+          <svg class="icon close-icon" hidden><use href="#icon-x"></use></svg>
+        </button>
+      </div>
+      <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-inner">
+          <a href="#home">Home</a>
+          <a href="#about">About Us</a>
+          <a href="#services">Services</a>
+          <a href="legislation.html">Legislation</a>
+          <a href="#contact">Contact Us</a>
+          <a class="button" href="Portal/index.html">Launch Portal</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="hero-bg" aria-hidden="true">
+          <img src="assets/hero-bg.jpg" alt="" />
+        </div>
+        <div class="container hero-content">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <h1>
+                <span>Western Cape's</span><br />
+                <span class="accent">Protected</span><br />
+                <span class="accent">Landscapes</span>
+              </h1>
+              <p class="hero-lead">
+                Access comprehensive geospatial data for conservation areas. Monitor, analyze, and protect our
+                natural heritage with advanced mapping tools and spatial insights.
+              </p>
+              <div class="hero-stat">
+                
+                <span style="color: white;">
+                Mapping Conservation. Preserving Tomorrow.
+                </span>
+                
+              
+              </div>
+            </div>
+
+            <div class="feature-wrap">
+              <div class="shuffle-card-stack" id="shuffle-card-stack">
+                <div class="shuffle-card-shadow" aria-hidden="true"></div>
+                <article class="glass-card shuffle-card">
+                  <div class="card-head">
+                    <div>
+                      <h3 data-card-field="name">Kruger National Park</h3>
+                      <p class="eyebrow">Featured <span data-card-field="siteType">Reserve</span></p>
+                    </div>
+                    <button class="round-action" type="button" aria-label="Show reserve location">
+                      <svg class="icon" aria-hidden="true"><use href="#icon-map-pin"></use></svg>
+                    </button>
+                  </div>
+                  <div class="quick-stats">
+                    <div class="mini-card">
+                      <div class="mini-label"><svg class="icon" aria-hidden="true"><use href="#icon-layers"></use></svg> Area</div>
+                      <p><span data-card-field="area">19,485</span> m²</p>
+                    </div>
+                  </div>
+                  <div class="region-card">
+                    <div class="map-action">
+                      <div>
+                        <p class="tiny">Region</p>
+                        <p data-card-field="district">Limpopo &amp; Mpumalanga</p>
+                      </div>
+                      <svg class="icon" aria-hidden="true"><use href="#icon-chevron-down"></use></svg>
+                    </div>
+                  </div>
+                  <a class="button button-outline" href="Portal/index.html">Explore Map Data</a>
+                </article>
+              </div>
+            </div>
+          </div>
+            
+
+
+          <div class="partners" style="
+            width: 100%;
+            padding: 1.2rem 2rem;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+
+            background: rgba(255,255,255,0.06);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            box-shadow:
+              0 8px 32px rgba(0,0,0,0.22),
+              inset 0 1px 0 rgba(255,255,255,0.06);
+          ">
+         
+            
+            <div class="partner-list" style="
+              display: flex;
+              justify-content: space-evenly;
+              align-items: center;
+              width: 100%;
+              gap: 2rem;
+              flex-wrap: wrap;
+              text-align: center;
+            ">
+              <a
+                class="partner-logo-link"
+                href="https://www.uct.ac.za/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="University of Cape Town"
+              >
+                <img
+                  class="partner-logo uct"
+                  src="assets/partners/uct.png"
+                  alt="University of Cape Town"
+                />
+              </a>
+
+              <a
+                class="partner-logo-link"
+                href="https://www.capenature.co.za/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Cape Nature"
+              >
+                <img
+                  class="partner-logo cape-nature"
+                  src="assets/partners/cape-nature.png"
+                  alt="Cape Nature"
+                />
+              </a>
+
+              <a
+                class="partner-logo-link"
+                href="https://www.sanbi.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="SANBI"
+              >
+                <img
+                  class="partner-logo sanbi"
+                  src="assets/partners/sanbi.png"
+                  alt="SANBI"
+                />
+              </a>
+
+              <a
+                class="partner-logo-link"
+                href="https://www.dffe.gov.za/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Department of Forestry, Fisheries and the Environment"
+              >
+                <img
+                  class="partner-logo dffe"
+                  src="assets/partners/dffe.png"
+                  alt="Department of Forestry, Fisheries and the Environment"
+                />
+              </a>
+
+              <a
+                class="partner-logo-link"
+                href="https://www.peaceparks.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Peace Parks Foundation"
+              >
+                <img
+                  class="partner-logo peace-parks"
+                  src="assets/partners/peace-parks.png"
+                  alt="Peace Parks Foundation"
+                />
+              </a>
+
+              <a
+                class="partner-logo-link"
+                href="https://www.sanparks.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="South African National Parks"
+              >
+                <img
+                  class="partner-logo sanparks"
+                  src="assets/partners/sanparks.png"
+                  alt="South African National Parks"
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section class="section muted-section" id="about">
+        <div class="container split-grid">
+          <div class="section-copy reveal from-left">
+            <h2>About <span class="accent">Conserva</span></h2>
+            <p>
+              Conserva is South Africa's premier geoportal for protected area management, providing comprehensive
+              geospatial tools and data services for conservation professionals, researchers, and policymakers.
+            </p>
+            <p>
+              Our platform integrates biodiversity data, and environmental monitoring systems to
+              support evidence-based decision-making in conservation. We work closely with government agencies,
+              academic institutions, and conservation organizations to ensure data accuracy and accessibility.
+            </p>
+            <div class="stat-grid stagger">
+              <div class="stat-card reveal" style="--i: 0"><strong>378+</strong><span>Protected Areas</span></div>
+              <div class="stat-card reveal" style="--i: 1"><strong>3.9M+</strong><span>Hectares Managed</span></div>
+              <div class="stat-card reveal" style="--i: 2"><strong>20+</strong><span>Data Layers</span></div>
+              <div class="stat-card reveal" style="--i: 3"><strong>6+</strong><span>Partner Organizations</span></div>
+            </div>
+          </div>
+          <div class="reveal from-right">
+            <div class="image-panel">
+              <img src="assets/hero-bg.jpg" alt="South African landscape" />
+              <div class="mission-card">
+                <strong>Our Mission</strong>
+                <p>To empower conservation through accessible, accurate geospatial data and tools.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="services">
+        <div class="container">
+          <div class="section-heading reveal">
+            <h2>Our <span class="accent">Services</span></h2>
+            <p class="section-lead">
+              Comprehensive geospatial solutions for conservation management and environmental monitoring.
+            </p>
+          </div>
+          <div class="services-grid stagger">
+            <article class="service-card reveal" style="--i: 0">
+              <span class="icon-box"><svg class="icon icon-lg"><use href="#icon-map"></use></svg></span>
+              <h3>Interactive Mapping</h3>
+              <p>Access detailed protected area maps with multiple geospatial data layers — including CBAs, ESAs, MCAs, Marine Protected Areas, rivers, and more — all at your fingertips.</p>
+            </article>
+            <article class="service-card reveal" style="--i: 1">
+              <span class="icon-box"><svg class="icon icon-lg"><use href="#icon-layers"></use></svg></span>
+              <h3>Data Analysis</h3>
+              <p>Advanced analytical tools for spatial analysis, environmental monitoring, and conservation planning.</p>
+            </article>
+            <article class="service-card reveal" style="--i: 2">
+              <span class="icon-box"><svg class="icon icon-lg"><use href="#icon-database"></use></svg></span>
+              <h3>Data Repository</h3>
+              <p>Centralized storage for conservation data with standardized formats and metadata management.</p>
+            </article>
+            <article class="service-card reveal" style="--i: 3">
+              <span class="icon-box"><svg class="icon icon-lg"><use href="#icon-download"></use></svg></span>
+              <h3>Data download</h3>
+              <p>Download spatial data as Shapefile (.shp) — ready for use in QGIS, ArcGIS, or any GIS software.</p>
+            </article>
+            <article class="service-card reveal" style="--i: 4">
+              <span class="icon-box"><svg class="icon icon-lg"><use href="#icon-users"></use></svg></span>
+              <h3>Collaboration Tools</h3>
+              <p>Share data and collaborate with partners across organizations with secure access controls.</p>
+            </article>
+            <article class="service-card reveal" style="--i: 5">
+              <span class="icon-box"><svg class="icon icon-lg"><use href="#icon-star"></use></svg></span>
+              <h3>Insights</h3>
+              <p>Transform geospatial data into actionable conservation insights through advanced spatial analysis.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section muted-section" id="contact">
+        <div class="container split-grid">
+          <div class="section-copy reveal from-left">
+            <h2>Get in <span class="accent">Touch</span></h2>
+            <p>Have questions about our platform or want to partner with us? We'd love to hear from you.</p>
+            <div class="contact-list stagger">
+              <div class="contact-row reveal" style="--i: 0">
+                <span class="icon-box"><svg class="icon"><use href="#icon-mail"></use></svg></span>
+                <div><p>Email</p><strong>info@conserva.org</strong></div>
+              </div>
+              <div class="contact-row reveal" style="--i: 1">
+                <span class="icon-box"><svg class="icon"><use href="#icon-phone"></use></svg></span>
+                <div><p>Phone</p><strong>021 402 3173</strong></div>
+              </div>
+              <div class="contact-row reveal" style="--i: 2">
+                <span class="icon-box"><svg class="icon"><use href="#icon-map-pin"></use></svg></span>
+                <div><p>Address</p><strong>The Square, 12 Dale Street, Cape Town</strong></div>
+              </div>
+            </div>
+          </div>
+          <div class="form-card reveal from-right">
+            <form>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="name">Name</label>
+                  <input id="name" type="text" placeholder="Your name" />
+                </div>
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input id="email" type="email" placeholder="your@email.com" />
+                </div>
+              </div>
+              <div class="field">
+                <label for="organization">Organization</label>
+                <input id="organization" type="text" placeholder="Your organization" />
+              </div>
+              <div class="field">
+                <label for="message">Message</label>
+                <textarea id="message" placeholder="How can we help you?"></textarea>
+              </div>
+              <button class="button" type="submit" style="width: 100%; min-height: 60px; border-radius: 12px">
+                <svg class="icon" aria-hidden="true"><use href="#icon-send"></use></svg>
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+  <div class="container footer-inner" style="display: flex; align-items: center; justify-content: space-between;">
+
+    <!-- Logo -->
+    <a class="brand" href="#home">
+      <img class="brand-logo" src="assets/conserva-logo-cropped.png" alt="Conserva">
+    </a>
+
+    <!-- Center Text -->
+    <div style="text-align: center; flex: 1;">
+
+      <p style="margin: 0;">
+        © 2026 APG3039B | Spatial Data Infrastructures | University of Cape Town<br />
+        
+      </p>
+
+      <p style="margin: 5px 0 0 0; font-size: 14px;">
+        Developed by Letelo Chuma and Kwinda Mulalo
+      </p>
+
+    </div>
+
+  <!-- Footer Text -->
+<div class="footer-links" style="display: flex; gap: 16px; align-items: center;">
+  
+  <span style="font-size: 14px; color: rgba(255,255,255,0.75);">
+    Privacy Policy
+  </span>
+
+  <span style="font-size: 14px; color: rgba(255,255,255,0.75);">
+    Terms of Use
+  </span>
+
+</div>
+</footer>
+
+    <svg aria-hidden="true" width="0" height="0" style="position: absolute">
+      <symbol id="icon-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.7 8.9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+      <symbol id="icon-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+      <symbol id="icon-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></symbol>
+      <symbol id="icon-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></symbol>
+      <symbol id="icon-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+      <symbol id="icon-star" viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21 7 14.2 2 9.3l6.9-1z"/></symbol>
+      <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></symbol>
+      <symbol id="icon-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+      <symbol id="icon-map" viewBox="0 0 24 24"><path d="M14.1 4.1 9.9 2.7a2 2 0 0 0-1.3 0L3.4 4.4A2 2 0 0 0 2 6.3v13.3a1 1 0 0 0 1.3.9l5.6-1.9a2 2 0 0 1 1.2 0l4.2 1.4a2 2 0 0 0 1.3 0l5.1-1.7a2 2 0 0 0 1.4-1.9V3.1a1 1 0 0 0-1.3-.9L15.4 4a2 2 0 0 1-1.3.1z"/><path d="M9 3v15"/><path d="M15 4v16"/></symbol>
+      <symbol id="icon-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+      <symbol id="icon-mail" viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 6-10 7L2 6"/></symbol>
+      <symbol id="icon-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2.1z"/></symbol>
+      <symbol id="icon-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></symbol>
+      <symbol id="icon-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></symbol>
+    </svg>
+
+    <script>
+      const toggle = document.querySelector(".menu-toggle");
+      const menu = document.querySelector(".mobile-menu");
+      const menuIcon = document.querySelector(".menu-icon");
+      const closeIcon = document.querySelector(".close-icon");
+
+      toggle.addEventListener("click", () => {
+        const isOpen = menu.classList.toggle("open");
+        toggle.setAttribute("aria-expanded", String(isOpen));
+        menuIcon.hidden = isOpen;
+        closeIcon.hidden = !isOpen;
+      });
+
+      menu.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          menu.classList.remove("open");
+          toggle.setAttribute("aria-expanded", "false");
+          menuIcon.hidden = false;
+          closeIcon.hidden = true;
+        });
+      });
+
+      document.querySelector("form").addEventListener("submit", (event) => {
+        event.preventDefault();
+      });
+
+      const cardStack = document.querySelector("#shuffle-card-stack");
+      const cardFields = {
+        name: document.querySelector('[data-card-field="name"]'),
+        siteType: document.querySelector('[data-card-field="siteType"]'),
+        area: document.querySelector('[data-card-field="area"]'),
+        district: document.querySelector('[data-card-field="district"]'),
+      };
+
+      const fallbackCardRows = [
+        { CUR_NME: "Goukamma Provincial Nature Reserve", SITE_TYPE: "Nature Reserve", GIS_AREA: "2310", DISTRICT: "Garden Route" },
+        { CUR_NME: "Gamka Mountain Provincial Nature Reserve", SITE_TYPE: "Nature Reserve", GIS_AREA: "9592", DISTRICT: "Garden Route" },
+        { CUR_NME: "De Hoop Nature Reserve", SITE_TYPE: "Nature Reserve", GIS_AREA: "33900", DISTRICT: "Overberg" },
+      ];
+
+      function parseCsv(text) {
+        const rows = [];
+        let row = [];
+        let value = "";
+        let quoted = false;
+
+        for (let i = 0; i < text.length; i += 1) {
+          const char = text[i];
+          const next = text[i + 1];
+
+          if (char === '"' && quoted && next === '"') {
+            value += '"';
+            i += 1;
+          } else if (char === '"') {
+            quoted = !quoted;
+          } else if (char === "," && !quoted) {
+            row.push(value);
+            value = "";
+          } else if ((char === "\n" || char === "\r") && !quoted) {
+            if (char === "\r" && next === "\n") i += 1;
+            row.push(value);
+            if (row.some((cell) => cell.trim() !== "")) rows.push(row);
+            row = [];
+            value = "";
+          } else {
+            value += char;
+          }
+        }
+
+        if (value || row.length) {
+          row.push(value);
+          rows.push(row);
+        }
+
+        const headers = rows.shift().map((header) => header.trim().toUpperCase());
+        return rows.map((cells) =>
+          Object.fromEntries(headers.map((header, index) => [header, (cells[index] || "").trim()]))
+        );
+      }
+
+      function formatArea(value) {
+        const number = Number(String(value).replace(/,/g, ""));
+        return Number.isFinite(number) ? number.toLocaleString("en-US") : value;
+      }
+
+      function updateShuffleCard(row) {
+        cardFields.name.textContent = row.CUR_NME || "Protected Area";
+        cardFields.siteType.textContent = row.SITE_TYPE || "Site";
+        cardFields.area.textContent = formatArea(row.GIS_AREA || "");
+        cardFields.district.textContent = row.DISTRICT || "Western Cape";
+      }
+
+      function startCardShuffle(rows) {
+        if (!cardStack || rows.length === 0) return;
+
+        let index = 0;
+        updateShuffleCard(rows[index]);
+
+        setInterval(() => {
+          cardStack.classList.add("shuffling");
+
+          window.setTimeout(() => {
+            index = (index + 1) % rows.length;
+            updateShuffleCard(rows[index]);
+            cardStack.classList.remove("shuffling");
+            cardStack.classList.add("settling");
+          }, 520);
+
+          window.setTimeout(() => {
+            cardStack.classList.remove("settling");
+          }, 900);
+        }, 4200);
+      }
+
+      fetch("assets/shuffle-cards.csv")
+        .then((response) => (response.ok ? response.text() : Promise.reject(new Error("CSV unavailable"))))
+        .then((text) => startCardShuffle(parseCsv(text)))
+        .catch(() => startCardShuffle(fallbackCardRows));
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15, rootMargin: "0px 0px -80px 0px" }
+      );
+
+      document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+    </script>
+  </body>
+</html>
