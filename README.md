@@ -4,7 +4,7 @@ Conserva is a geoportal developed as part of the 2026 APG3039B Spatial Data Infr
 
 The project focuses on the management and presentation of geospatial information related to protected and conservation areas in South Africa, including national parks, municipal protected areas, biodiversity priority areas, rivers, and other environmental datasets.
 
-The geoportal provides a modern landing page and access to interactive web mapping tools for exploring conservation related spatial data.
+The geoportal provides a modern landing page and access to interactive web mapping tools for exploring conservation related geospatial data.
 
 Developed by:
 - Letelo Chuma (CHMLET004)
